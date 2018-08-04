@@ -3,7 +3,7 @@ body {
   background-color: #ccc;
 }
 
-#app {
+#canvas {
   display: block;
   position: absolute;
   left: 50%;
