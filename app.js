@@ -5,7 +5,7 @@
     constructor(el) {
       this.canvas = el
       this.isDraw = false
-      this.spot = 24;
+      this.spot = 20
       this.ctx = this.canvas.getContext('2d')
       this.setHandlers()
     }
@@ -34,16 +34,16 @@
       })
 
       this.canvas.addEventListener('mousedown', () => {
-				this.isDraw = true
+				this.isDrawing = true
 				this.ctx.beginPath()
 			})
 
 			this.canvas.addEventListener('mouseup', () => {
-				this.isDraw = false
+				this.isDrawing = false
 			})
 
 			this.canvas.addEventListener('mousemove', e => {
-				if(!this.isDraw) {
+				if(!this.isDrawing) {
           return
         }
         this.ctx.lineWidth = this.spot
@@ -53,7 +53,7 @@
         this.ctx.lineTo(e.offsetX, e.offsetY)
         this.ctx.stroke()
 
-        this.ctx.beginPath();
+        this.ctx.beginPath()
         this.ctx.arc(e.offsetX, e.offsetY, this.spot / 2, 0, Math.PI * 2)
         this.ctx.fill()
 
@@ -64,7 +64,8 @@
     }
 
     clear() {
-      alert('clear')
+      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
+      this.drawGrid()
     }
 
     train() {
@@ -73,6 +74,33 @@
 
     guess() {
       alert('guess')
+    }
+
+    drawLine(x1, y1, x2, y2, color = 'gray') {
+      this.ctx.beginPath()
+      this.ctx.lineJoin = 'miter'
+      this.ctx.lineWidth = 1
+      this.ctx.strokeStyle = color
+      this.ctx.moveTo(x1, y1)
+      this.ctx.lineTo(x2, y2)
+      this.ctx.stroke()
+    }
+
+    drawGrid() {
+      const width = this.canvas.width
+      const height = canvas.height
+      const q = width / this.spot
+
+      const xStep = width / q
+      const yStep = height / q
+
+      for(let x = 0; x < width; x += xStep ) {
+        this.drawLine(x, 0, x, height)
+      }
+
+      for( let y = 0; y < height; y += yStep ) {
+        this.drawLine(0, y, width, y)
+      }
     }
 
   }
