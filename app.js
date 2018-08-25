@@ -3,8 +3,9 @@ class App {
   constructor(el) {
     this.canvas = el
     this.isDraw = false
-    this.spot = 20
+    this.spot = 16
     this.trainData = []
+    this.nn = null
     this.ctx = this.canvas.getContext('2d')
     this.setHandlers()
   }
@@ -77,13 +78,17 @@ class App {
   }
 
   guess() {
-    alert('guess')
+    this.nn = new brain.NeuralNetwork()
+    this.nn.train(this.trainData, {log: true})
+    const result = brain.likely(this.calc(), this.nn)
+    console.log(this.trainData)
+    alert(result)
   }
 
-  drawLine(x1, y1, x2, y2, color = 'gray') {
+  drawLine(x1, y1, x2, y2, color = 'brown') {
     this.ctx.beginPath()
     this.ctx.lineJoin = 'miter'
-    this.ctx.lineWidth = 1
+    this.ctx.lineWidth = .1
     this.ctx.strokeStyle = color
     this.ctx.moveTo(x1, y1)
     this.ctx.lineTo(x2, y2)
@@ -102,7 +107,7 @@ class App {
       this.drawLine(x, 0, x, height)
     }
 
-    for( let y = 0; y < height; y += yStep) {
+    for(let y = 0; y < height; y += yStep) {
       this.drawLine(0, y, width, y)
     }
   }
@@ -139,7 +144,7 @@ class App {
           }
         }
 
-        if( cnt > 1 && isDraw) {
+        if(cnt > 1 && isDraw) {
           path.push([x, y, xStep, yStep])
         }
 
